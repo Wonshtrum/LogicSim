@@ -1,8 +1,4 @@
-from context import *
-from devices import *
-from bus import *
-from gui import *
-from utils import *
+from logic_sim import *
 
 
 ctx = Context("Main ctx")
@@ -24,4 +20,6 @@ env.can.pack()
 label.pack(side=tk.LEFT)
 
 env.draw("rect", 0,0,1,1, fill="black", width=0)
-win.mainloop()
+a = Chip_And()
+env.cursor.attach(a)
+#win.mainloop()

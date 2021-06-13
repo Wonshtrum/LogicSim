@@ -1,5 +1,5 @@
-from bits import *
-from utils import *
+from .bits import *
+from .utils import *
 
 
 class Gate(Visitable):
@@ -11,6 +11,9 @@ class Gate(Visitable):
 		pin = self.pins[pin]
 		pin.B = bridge.A
 		bridge.B = pin.A
+	
+	def clone(self):
+		return self.__class__(self.n_pins)
 	
 	def __getitem__(self, pin):
 		return self.pins[pin]

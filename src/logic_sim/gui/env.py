@@ -1,30 +1,16 @@
 import tkinter as tk
+from .cursor import Cursor
 
-
-class Cursor:
-	def __init__(self, env):
-		self.env = env
-
-	def update(self, x, y):
-		pass
-	def move(self, x, y):
-		pass
-	def b2(self, x, y):
-		pass
-	def b3(self, x, y):
-		self.env.draw("rect", x,y,x+1,y+1, fill="red", width=0)
-	def b2r(self, x, y):
-		pass
-	def b3r(self, x, y):
-		pass
 
 class Env:
 	Actions = {
 		"Motion": "move",
+		"Button-1": "b1",
 		"Button-2": "b2",
 		"Button-3": "b3",
+		"ButtonRelease-1": "b1r",
 		"ButtonRelease-2": "b2r",
-		"ButtonRelease-3": "b3r"
+		"ButtonRelease-3": "b3r",
 	}
 	def __init__(self, win, col=30, row=30, scale=4, ox=0, oy=0, label=None, **kwargs):
 		self.win = win
@@ -50,6 +36,8 @@ class Env:
 
 		for event, callback in Env.Actions.items():
 			self.bind(event, self.callback(callback))
+		self.bind("Key", lambda event: self.cursor.key(event.keycode))
+
 		self.bind("Button-1", self.scroll_start)
 		self.bind("B1-Motion", self.scroll_move)
 		self.bind("Button-4", self.zoom)
@@ -66,10 +54,10 @@ class Env:
 		return bind
 
 	def bind(self, event, callback):
-		self.can.bind(f"<{event}>", callback)
+		self.can.bind(f"<{event}>", callback, add="+")
 
 	def position(self, event):
-		x, y = (event.x+self.ox-1)//self.scale, (event.y+self.oy-1)//self.scale
+		x, y = int((event.x+self.ox-1)/self.scale), int((event.y+self.oy-1)/self.scale)
 		if self.label is not None:
 			self.label.set(f"({x} ; {y})")
 		return x, y

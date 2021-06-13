@@ -1,4 +1,4 @@
-from bits import *
+from .bits import *
 
 
 class Bus(Visitable):
