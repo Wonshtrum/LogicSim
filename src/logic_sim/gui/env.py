@@ -1,5 +1,10 @@
 import tkinter as tk
 from .cursor import Cursor
+from math import cos, sin
+
+
+def int_(x):
+	return int(x//1)
 
 
 class Env:
@@ -18,6 +23,12 @@ class Env:
 		self.scale = 2**scale
 		self.ox = ox
 		self.oy = oy
+		self.dx = 0
+		self.dy = 0
+		self.x = 0
+		self.y = 0
+		self.cos = None
+		self.sin = None
 		self.label = label
 
 		self.can = tk.Canvas(
@@ -57,15 +68,41 @@ class Env:
 		self.can.bind(f"<{event}>", callback, add="+")
 
 	def position(self, event):
-		x, y = int((event.x+self.ox-1)/self.scale), int((event.y+self.oy-1)/self.scale)
+		x, y = int_((event.x+self.ox-1)/self.scale), int_((event.y+self.oy-1)/self.scale)
 		if self.label is not None:
 			self.label.set(f"({x} ; {y})")
 		return x, y
-	
+
+	def rotate(self, angle=None, x=None, y=None):
+		if x is not None: self.x = x
+		if y is not None: self.y = y
+		if angle is None:
+			self.cos = None
+			self.sin = None
+			self.x = 0
+			self.y = 0
+		else:
+			angle %= 4
+			angle *= 3.14159265358979323/2
+			self.cos = cos(angle)
+			self.sin = sin(angle)
+
+	def translate(self, dx=0, dy=0):
+		self.dx = dx
+		self.dy = dy
+
 	def draw(self, shape, *args, **kwargs):
-		coords = [_*self.scale if i%2 else _*self.scale for i,_ in enumerate(args)]
+		if "width" not in kwargs:
+			kwargs["width"] = 0
+		c, s, x, y, dx, dy = self.cos, self.sin, self.x, self.y, self.dx, self.dy
+		args = zip(args[::2], args[1::2])
+		if self.cos is None:
+			coords = [(a+dx, b+dy) for a,b in args]
+		else:
+			coords = [((a-x)*c+(b-y)*s+x+dx, -(a-x)*s+(b-y)*c+y+dy) for a,b in args]
+		coords = [_*self.scale for xy in coords for _ in xy]
 		return self.draw_commands[shape](coords, **kwargs)
-	
+
 	def zoom(self, event):
 		direction = event.num == 4 or event.delta>0
 		factor = 2 if direction else 1/2
