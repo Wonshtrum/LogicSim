@@ -8,7 +8,7 @@ def int_(x):
 
 
 class Env:
-	Actions = {
+	actions = {
 		"Motion": "move",
 		"Button-1": "b1",
 		"Button-2": "b2",
@@ -46,7 +46,7 @@ class Env:
 			"poly": self.can.create_polygon
 		}
 
-		for event, callback in Env.Actions.items():
+		for event, callback in Env.actions.items():
 			self.bind(event, self.callback(callback))
 		self.bind("Key", lambda event: self.cursor.key(event.keycode))
 
@@ -68,20 +68,32 @@ class Env:
 	def bind(self, event, callback):
 		self.can.bind(f"<{event}>", callback, add="+")
 
+	def add_handle(self, handle):
+		tag = f"_{id(handle)}"
+		self.draws[tag] = handle
+		self.can.itemconfigure(tag, state="normal")
+
 	def get_back(self):
 		tags = self.can.gettags("current")
+		self.select = self.group_select = None
 		if len(tags) > 1:
 			*tags, _id, _ = tags
 			obj = self.draws.get(_id, None)
+			self.group_select = obj
 			if obj is not None:
-				return (obj, obj.get_back(*tags))
+				try:
+					self.select = obj.get_back(*tags)
+					return (obj, self.select)
+				except Exception:
+					pass
 			return (*tags, _id)
 		return tags
 		
 	def position(self, event):
 		x, y = int_((event.x+self.ox-1)/self.scale), int_((event.y+self.oy-1)/self.scale)
+		infos = self.get_back()
 		if self.label is not None:
-			self.label.set(f"({x} ; {y})\t{self.get_back()}")
+			self.label.set(f"({x} ; {y})\t{infos}")
 		return x, y
 
 	def rotate(self, angle=None, x=None, y=None):

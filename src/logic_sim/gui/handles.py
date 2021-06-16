@@ -6,6 +6,7 @@ class Handle:
 		self.host = host
 		self.cursor = cursor
 		self.args = [[None, None, None, None]]
+		self.move(cursor.x, cursor.y)
 
 	def button(self, num, press, x, y):
 		head = self.args.pop()
@@ -26,7 +27,7 @@ class Handle:
 			self.host.on_move(self)
 	
 	def release(self):
-		self.cursor.env.draws[f"_{id(self.host)}"] = self.host
+		self.cursor.env.add_handle(self.host)
 		self.cursor.handle = None
 
 

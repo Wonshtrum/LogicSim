@@ -1,7 +1,6 @@
 from .handles import Drawable, Attachable
 from ..utils import super_init
 from ..devices import *
-from math import pi
 
 
 CHIP_COLOR = "#447"

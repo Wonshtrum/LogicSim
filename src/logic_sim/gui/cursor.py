@@ -4,8 +4,8 @@ from .handles import Handle
 class Cursor:
 	def __init__(self, env):
 		self.env = env
-		self.x = None
-		self.y = None
+		self.x = 0
+		self.y = 0
 		self.handle = None
 
 	def update(self, x, y):
@@ -40,7 +40,6 @@ class Cursor:
 
 	@hand_over
 	def b3(self, x, y):
-		#self.env.draw("rect", x,y,x+1,y+1, fill="red", width=0)
 		self.handle.button(3, True, x, y)
 
 	@hand_over
@@ -51,6 +50,8 @@ class Cursor:
 	def b2r(self, x, y):
 		self.handle.button(2, False, x, y)
 
-	@hand_over
 	def b3r(self, x, y):
-		self.handle.button(3, False, x, y)
+		if self.handle is not None:
+			self.handle.button(3, False, x, y)
+		elif self.env.group_select is not None:
+			self.attach(self.env.group_select)

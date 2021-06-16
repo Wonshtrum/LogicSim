@@ -1,4 +1,9 @@
 class Drawable:
+	default = {
+		"activefill": "white",
+		"disabledstipple": "gray50",
+		"state": "disabled",
+	}
 	def __init__(self, env):
 		self.env = env
 		self.shapes = {}
@@ -7,13 +12,17 @@ class Drawable:
 
 	def get_back(self, *tags):
 		return tags
-	
+
 	def _draw(self, *args, name="_", **kwargs):
 		if not name in self.shapes:
 			self.shapes[name] = []
 		tags = kwargs.get("tags", [])
 		tags.append(f"_{id(self)}")
 		kwargs["tags"] = tags
+
+		for key, value in self.default.items():
+			kwargs[key] = kwargs.get(key, value)
+
 		self.shapes[name].append(self.env.draw(*args, **kwargs))
 
 	def move(self, x, y):
