@@ -4,10 +4,16 @@ class Drawable:
 		self.shapes = {}
 		self.x = 0
 		self.y = 0
+
+	def get_back(self, *tags):
+		return tags
 	
 	def _draw(self, *args, name="_", **kwargs):
 		if not name in self.shapes:
 			self.shapes[name] = []
+		tags = kwargs.get("tags", [])
+		tags.append(f"_{id(self)}")
+		kwargs["tags"] = tags
 		self.shapes[name].append(self.env.draw(*args, **kwargs))
 
 	def move(self, x, y):

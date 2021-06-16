@@ -22,7 +22,14 @@ class Chip(Drawable, Attachable):
 
 		self.pins = pins
 		self.map_pins = map_pins
-	
+
+	def get_back(self, *tags):
+		if len(tags) == 1:
+			tag = int(tags[0])
+			pin = self.map_pins[tag]
+			return (f"pin_{pin}", self.device[pin])
+		return tags
+
 	def draw(self):
 		x, y, w, h = self.x, self.y, self.width, self.height
 		d = 0.2
@@ -37,10 +44,10 @@ class Chip(Drawable, Attachable):
 		self._draw("rect", d, d, d*2.5, d*2.5, fill=HIGHLIGHT_COLOR)
 		for i in range(w):
 			if self.pins[i]:
-				self._draw("rect", i+d, 0, i+1-d, -1+d*2, fill=PIN_COLOR)
+				self._draw("rect", i+d, 0, i+1-d, -1+d*2, tags=[i], fill=PIN_COLOR)
 		for i in range(w):
 			if self.pins[i+w]:
-				self._draw("rect", i+d, h, i+1-d, h+1-d*2, fill=PIN_COLOR)
+				self._draw("rect", i+d, h, i+1-d, h+1-d*2, tags=[i+w], fill=PIN_COLOR)
 		self.env.rotate()
 		self.env.translate()
 

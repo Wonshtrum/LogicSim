@@ -26,6 +26,7 @@ class Handle:
 			self.host.on_move(self)
 	
 	def release(self):
+		self.cursor.env.draws[f"_{id(self.host)}"] = self.host
 		self.cursor.handle = None
 
 
@@ -45,4 +46,4 @@ class Attachable:
 		return num == 3 and not press
 	
 	def __repr__(self):
-		return f"[{self.device}]"
+		return f"{self.device}_H"

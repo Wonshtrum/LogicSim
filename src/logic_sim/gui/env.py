@@ -30,6 +30,7 @@ class Env:
 		self.cos = None
 		self.sin = None
 		self.label = label
+		self.draws = {}
 
 		self.can = tk.Canvas(
 			win,
@@ -67,10 +68,20 @@ class Env:
 	def bind(self, event, callback):
 		self.can.bind(f"<{event}>", callback, add="+")
 
+	def get_back(self):
+		tags = self.can.gettags("current")
+		if len(tags) > 1:
+			*tags, _id, _ = tags
+			obj = self.draws.get(_id, None)
+			if obj is not None:
+				return (obj, obj.get_back(*tags))
+			return (*tags, _id)
+		return tags
+		
 	def position(self, event):
 		x, y = int_((event.x+self.ox-1)/self.scale), int_((event.y+self.oy-1)/self.scale)
 		if self.label is not None:
-			self.label.set(f"({x} ; {y})")
+			self.label.set(f"({x} ; {y})\t{self.get_back()}")
 		return x, y
 
 	def rotate(self, angle=None, x=None, y=None):
