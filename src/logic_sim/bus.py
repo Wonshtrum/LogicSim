@@ -6,7 +6,6 @@ class Bus(Visitable):
 		self.connections = set()
 
 	def connect(self, bridge):
-		print(bridge)
 		bridge.connect(self)
 		self.connections.add(bridge)
 	

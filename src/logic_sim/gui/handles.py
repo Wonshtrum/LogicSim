@@ -6,6 +6,7 @@ class Handle:
 		self.host = host
 		self.cursor = cursor
 		self.args = [[None, None, None, None]]
+		host.handshake(self)
 		self.move(cursor.x, cursor.y)
 
 	def button(self, num, press, x, y):
@@ -17,7 +18,7 @@ class Handle:
 
 	def key(self, code):
 		if code == 9 and len(self.args)>1:
-			self.args.pop()
+			self.args.pop(-2)
 		self.host.on_key(code, self)
 
 	def move(self, x, y):
@@ -34,6 +35,9 @@ class Handle:
 class Attachable:
 	def __init__(self, device):
 		self.device = device()
+
+	def handshake(self, handle):
+		pass
 
 	def on_key(self, code, handle):
 		print(code)
