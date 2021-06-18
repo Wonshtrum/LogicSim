@@ -21,3 +21,6 @@ def desc(obj):
 		print(obj.description())
 	else:
 		print(obj)
+
+def bind(func, *args, **kwargs):
+	return lambda: func(*args, **kwargs)

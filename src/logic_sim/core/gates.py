@@ -1,5 +1,5 @@
 from .bits import *
-from .utils import *
+from ..utils import *
 
 
 class Gate(Visitable):

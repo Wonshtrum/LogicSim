@@ -21,6 +21,14 @@ env = Env(win, bg=BG_COLOR, highlightthickness=0, label=txt)
 env.can.pack()
 label.pack(side=tk.LEFT)
 
+Menu = tk.Menu
+menuBar = Menu(win)
+menuFile = Menu(menuBar, tearoff=0)
+for device in (Chip_Not, Chip_And, Chip_Or, Chip_Xor, Chip_Nand, Chip_Nor, Chip_Device, Wire):
+	menuFile.add_command(label=device.__name__, command=bind(lambda d:env.cursor.attach(d()), device))
+menuBar.add_cascade(label="Devices", menu=menuFile)
+win.config(menu = menuBar)
+
 env.draw("rect", 0,0,1,1, fill="red", width=0)
 a = Chip_Nand()
 env.cursor.attach(a)

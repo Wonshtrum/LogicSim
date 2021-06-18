@@ -1,5 +1,6 @@
-from .handles import Drawable, Attachable
-from ..bus import Bus
+from .handles import Attachable
+from .draw import Drawable
+from ..core.bus import Bus
 
 
 HIGHLIGHT_COLOR = "#F08"
@@ -9,9 +10,6 @@ class Wire(Drawable, Attachable):
 		Drawable.__init__(self, env)
 		Attachable.__init__(self, Bus)
 		self.path = []
-
-	def handshake(self, handle):
-		self.path = handle.args
 
 	def get_back(self, *tags):
 		if len(tags) == 1:
@@ -26,9 +24,17 @@ class Wire(Drawable, Attachable):
 		for i, (_, _, x, y) in enumerate(self.path):
 			if i > 0:
 				self._draw("line", ox, oy, x, y, fill=PIN_COLOR)
-			self._draw("rect", x-d, y-d, x+d, y+d, fill=PIN_COLOR)
+			self._draw("rect", x-d, y-d, x+d, y+d, name="caps", fill=PIN_COLOR)
 			ox, oy = x, y
+		self.apply(self.env.can.tag_raise, "caps")
 		self.env.translate()
+
+	def on_create(self, handle):
+		self.path = handle.args
+		self.draw()
+
+	def on_destroy(self, handle):
+		self.delete()
 
 	def on_move(self, handle):
 		self.draw()

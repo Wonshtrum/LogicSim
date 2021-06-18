@@ -14,6 +14,8 @@ class Cursor:
 
 	def attach(self, attachable):
 		attachable.env = self.env
+		if self.handle is not None:
+			self.handle.release(destroy=True)
 		self.handle = Handle(attachable, self)
 
 	def hand_over(func):

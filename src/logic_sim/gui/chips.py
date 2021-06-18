@@ -1,6 +1,7 @@
-from .handles import Drawable, Attachable
+from .handles import Attachable
+from .draw import Drawable
 from ..utils import super_init
-from ..devices import *
+from ..core.devices import *
 
 
 CHIP_COLOR = "#447"
@@ -50,6 +51,13 @@ class Chip(Drawable, Attachable):
 		self.env.rotate()
 		self.env.translate()
 
+	def on_create(self, handle):
+		_, _, x, y = handle.args[-1]
+		self.move(x, y, force=True)
+
+	def on_destroy(self, handle):
+		self.delete()
+
 	def on_move(self, handle):
 		_, _, x, y = handle.args[-1]
 		self.move(x, y)
@@ -79,7 +87,7 @@ class Chip_Or(Chip):
 	pass
 
 @super_init(Xor, 3, 2, [1,0,1,0,1,0])
-class Chip_Or(Chip):
+class Chip_Xor(Chip):
 	pass
 
 @super_init(Nand, 3, 2, [1,0,1,0,1,0])

@@ -25,8 +25,14 @@ class Drawable:
 
 		self.shapes[name].append(self.env.draw(*args, **kwargs))
 
-	def move(self, x, y):
-		if self.x != x or self.y != y:
+	def apply(self, func, *names):
+		if not names:
+			names = self.shapes
+		for name in names:
+			for shape in self.shapes[name]: func(shape)
+
+	def move(self, x, y, force=False):
+		if force or self.x != x or self.y != y:
 			self.x = x
 			self.y = y
 			self.draw()

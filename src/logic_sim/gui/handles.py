@@ -1,13 +1,9 @@
-from .draw import Drawable
-
-
 class Handle:
 	def __init__(self, host, cursor):
 		self.host = host
 		self.cursor = cursor
-		self.args = [[None, None, None, None]]
-		host.handshake(self)
-		self.move(cursor.x, cursor.y)
+		self.args = [[None, None, cursor.x, cursor.y]]
+		host.on_create(self)
 
 	def button(self, num, press, x, y):
 		head = self.args.pop()
@@ -27,18 +23,22 @@ class Handle:
 			self.args[-1][3] = y
 			self.host.on_move(self)
 	
-	def release(self):
-		self.cursor.env.add_handle(self.host)
+	def release(self, destroy=False):
 		self.cursor.handle = None
+		if destroy:
+			self.host.on_destroy(self)
+		else:
+			self.cursor.env.add_handle(self.host)
 
 
 class Attachable:
 	def __init__(self, device):
 		self.device = device()
 
-	def handshake(self, handle):
+	def on_create(self, handle):
 		pass
-
+	def on_destroy(self, handle):
+		pass
 	def on_key(self, code, handle):
 		print(code)
 		pass
