@@ -7,6 +7,7 @@ class Cursor:
 		self.x = 0
 		self.y = 0
 		self.handle = None
+		self.auto_supply = True
 
 	def update(self, x, y):
 		self.x = x

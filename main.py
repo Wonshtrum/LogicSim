@@ -30,6 +30,6 @@ menuBar.add_cascade(label="Devices", menu=menuFile)
 win.config(menu = menuBar)
 
 env.draw("rect", 0,0,1,1, fill="red", width=0)
-a = Chip_Nand()
+a = Chip_Not()
 env.cursor.attach(a)
 #win.mainloop()

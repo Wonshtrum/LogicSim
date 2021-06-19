@@ -8,8 +8,8 @@ CHIP_COLOR = "#447"
 HIGHLIGHT_COLOR = "#F08"
 PIN_COLOR = "#FB0"
 class Chip(Drawable, Attachable):
-	def __init__(self, device, width, height, pins=None, map_pins=None, env=None):
-		Drawable.__init__(self, env)
+	def __init__(self, device, width, height, pins=None, map_pins=None):
+		Drawable.__init__(self)
 		Attachable.__init__(self, device)
 		self.width = width
 		self.height = height
@@ -53,7 +53,7 @@ class Chip(Drawable, Attachable):
 
 	def on_create(self, handle):
 		_, _, x, y = handle.args[-1]
-		self.move(x, y, force=True)
+		self.move(x, y)
 
 	def on_destroy(self, handle):
 		self.delete()

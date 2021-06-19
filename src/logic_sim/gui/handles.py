@@ -13,12 +13,16 @@ class Handle:
 		self.args.append(head)
 
 	def key(self, code):
-		if code == 9 and len(self.args)>1:
-			self.args.pop(-2)
+		if code == 9:
+			if len(self.args) > 1:
+				self.args.pop(-2)
+			else:
+				self.release(destroy=True)
+				return
 		self.host.on_key(code, self)
 
 	def move(self, x, y):
-		if (x, y) != self.args[-1][2:]:
+		if [x, y] != self.args[-1][2:]:
 			self.args[-1][2] = x
 			self.args[-1][3] = y
 			self.host.on_move(self)
@@ -29,6 +33,9 @@ class Handle:
 			self.host.on_destroy(self)
 		else:
 			self.cursor.env.add_handle(self.host)
+			if self.cursor.auto_supply:
+				new_attachable = self.host.__class__()
+				self.cursor.attach(new_attachable)
 
 
 class Attachable:

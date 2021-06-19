@@ -4,7 +4,7 @@ class Drawable:
 		"disabledstipple": "gray50",
 		"state": "disabled",
 	}
-	def __init__(self, env):
+	def __init__(self, env=None):
 		self.env = env
 		self.shapes = {}
 		self.x = 0
@@ -31,11 +31,10 @@ class Drawable:
 		for name in names:
 			for shape in self.shapes[name]: func(shape)
 
-	def move(self, x, y, force=False):
-		if force or self.x != x or self.y != y:
-			self.x = x
-			self.y = y
-			self.draw()
+	def move(self, x, y):
+		self.x = x
+		self.y = y
+		self.draw()
 	
 	def draw(self):
 		pass

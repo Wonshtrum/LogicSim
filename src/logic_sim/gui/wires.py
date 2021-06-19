@@ -6,8 +6,8 @@ from ..core.bus import Bus
 HIGHLIGHT_COLOR = "#F08"
 PIN_COLOR = "#FB0"
 class Wire(Drawable, Attachable):
-	def __init__(self, env=None):
-		Drawable.__init__(self, env)
+	def __init__(self):
+		Drawable.__init__(self)
 		Attachable.__init__(self, Bus)
 		self.path = []
 
@@ -46,4 +46,4 @@ class Wire(Drawable, Attachable):
 		num, press, x, y = handle.args[-1]
 		if num == 3 and not press:
 			handle.release()
-		return num == 2 and not press	
+		return num == 2 and not press
