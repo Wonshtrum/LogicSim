@@ -1,8 +1,12 @@
 class Handle:
-	def __init__(self, host, cursor):
+	def __init__(self, host, cursor, save_state=None):
 		self.host = host
 		self.cursor = cursor
 		self.args = [[None, None, cursor.x, cursor.y]]
+		if save_state is not None:
+			for key, value in save_state.items():
+				if hasattr(host, key):
+					setattr(host, key, value)
 		host.on_create(self)
 
 	def button(self, num, press, x, y):
@@ -28,9 +32,13 @@ class Handle:
 			self.host.on_move(self)
 	
 	def release(self, destroy=False):
+		for key, value in self.cursor.save_state.items():
+			self.cursor.save_state[key] = getattr(self.host, key, value)
+
 		self.cursor.handle = None
 		if destroy:
 			self.host.on_destroy(self)
+			self.cursor.auto_supply = False
 		else:
 			self.cursor.env.add_handle(self.host)
 			if self.cursor.auto_supply:

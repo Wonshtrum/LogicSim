@@ -8,16 +8,20 @@ class Cursor:
 		self.y = 0
 		self.handle = None
 		self.auto_supply = True
+		self.save_state = {"angle":0}
 
 	def update(self, x, y):
 		self.x = x
 		self.y = y
 
-	def attach(self, attachable):
+	def attach(self, attachable, apply_state=True):
 		attachable.env = self.env
 		if self.handle is not None:
 			self.handle.release(destroy=True)
-		self.handle = Handle(attachable, self)
+		if apply_state:
+			self.handle = Handle(attachable, self, self.save_state)
+		else:
+			self.handle = Handle(attachable, self)
 
 	def hand_over(func):
 		def wrapper(self, *args, **kwargs):
@@ -57,4 +61,4 @@ class Cursor:
 		if self.handle is not None:
 			self.handle.button(3, False, x, y)
 		elif self.env.group_select is not None:
-			self.attach(self.env.group_select)
+			self.attach(self.env.group_select, apply_state=False)

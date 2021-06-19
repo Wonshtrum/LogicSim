@@ -24,8 +24,12 @@ label.pack(side=tk.LEFT)
 Menu = tk.Menu
 menuBar = Menu(win)
 menuFile = Menu(menuBar, tearoff=0)
+def attach(device):
+	env.cursor.attach(device(), apply_state=False)
+	env.cursor.auto_supply = True
+
 for device in (Chip_Not, Chip_And, Chip_Or, Chip_Xor, Chip_Nand, Chip_Nor, Chip_Device, Wire):
-	menuFile.add_command(label=device.__name__, command=bind(lambda d:env.cursor.attach(d()), device))
+	menuFile.add_command(label=device.__name__, command=bind(attach, device))
 menuBar.add_cascade(label="Devices", menu=menuFile)
 win.config(menu = menuBar)
 

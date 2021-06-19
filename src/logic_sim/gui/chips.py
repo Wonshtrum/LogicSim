@@ -13,7 +13,6 @@ class Chip(Drawable, Attachable):
 		Attachable.__init__(self, device)
 		self.width = width
 		self.height = height
-		self.angle = 0
 
 		if pins is None:
 			pins = [1]*width*2

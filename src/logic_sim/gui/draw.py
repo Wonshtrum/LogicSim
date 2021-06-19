@@ -9,6 +9,7 @@ class Drawable:
 		self.shapes = {}
 		self.x = 0
 		self.y = 0
+		self.angle = 0
 
 	def get_back(self, *tags):
 		return tags

@@ -23,4 +23,4 @@ def desc(obj):
 		print(obj)
 
 def bind(func, *args, **kwargs):
-	return lambda: func(*args, **kwargs)
+	return lambda *_, **__: func(*args, *_, **kwargs, **__)
