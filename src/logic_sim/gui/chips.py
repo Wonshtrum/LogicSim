@@ -1,5 +1,4 @@
 from .handles import Attachable
-from .draw import Drawable
 from ..utils import super_init
 from ..core.devices import *
 
@@ -7,9 +6,8 @@ from ..core.devices import *
 CHIP_COLOR = "#447"
 HIGHLIGHT_COLOR = "#F08"
 PIN_COLOR = "#FB0"
-class Chip(Drawable, Attachable):
+class Chip(Attachable):
 	def __init__(self, device, width, height, pins=None, map_pins=None):
-		Drawable.__init__(self)
 		Attachable.__init__(self, device)
 		self.width = width
 		self.height = height
@@ -26,7 +24,7 @@ class Chip(Drawable, Attachable):
 		if len(tags) == 1:
 			tag = int(tags[0])
 			pin = self.map_pins[tag]
-			return (f"pin_{pin}", self.device[pin])
+			return (self.device[pin], f"pin_{pin}")
 		return tags
 
 	def draw(self):

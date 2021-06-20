@@ -13,6 +13,9 @@ class Visitable(Named):
 	def update(self, context):
 		pass
 
+	def get_id(self):
+		return f"_{id(self)}"
+
 
 class Dummy(Visitable):
 	def __repr__(self):

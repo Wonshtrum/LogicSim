@@ -13,12 +13,15 @@ class Drawable:
 
 	def get_back(self, *tags):
 		return tags
+	
+	def get_id(self):
+		return "_{id(self)}"
 
 	def _draw(self, *args, name="_", **kwargs):
 		if not name in self.shapes:
 			self.shapes[name] = []
 		tags = kwargs.get("tags", [])
-		tags.append(f"_{id(self)}")
+		tags.append(self.get_id())
 		kwargs["tags"] = tags
 
 		for key, value in self.default.items():
@@ -26,11 +29,11 @@ class Drawable:
 
 		self.shapes[name].append(self.env.draw(*args, **kwargs))
 
-	def apply(self, func, *names):
+	def apply(self, func, *names, **kwargs):
 		if not names:
 			names = self.shapes
 		for name in names:
-			for shape in self.shapes[name]: func(shape)
+			for shape in self.shapes[name]: func(shape, **kwargs)
 
 	def move(self, x, y):
 		self.x = x

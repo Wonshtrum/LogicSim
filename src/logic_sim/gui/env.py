@@ -31,6 +31,8 @@ class Env:
 		self.sin = None
 		self.label = label
 		self.draws = {}
+		self.select = None
+		self.group_select = None
 
 		self.can = tk.Canvas(
 			win,
@@ -69,9 +71,18 @@ class Env:
 		self.can.bind(f"<{event}>", callback, add="+")
 
 	def add_handle(self, handle):
-		tag = f"_{id(handle)}"
+		tag = handle.get_id()
 		self.draws[tag] = handle
 		self.can.itemconfigure(tag, state="normal")
+
+	def update_handle(self, _id):
+		obj = self.draws.get(_id, None)
+		if obj is not None:
+			obj.on_update()
+
+	def update_handles(self, handles):
+		for handle in handles:
+			self.update_handle(handle)
 
 	def get_back(self):
 		tags = self.can.gettags("current")
@@ -82,11 +93,13 @@ class Env:
 			self.group_select = obj
 			if obj is not None:
 				try:
-					self.select = obj.get_back(*tags)
-					return (obj, self.select)
+					self.select, *comments = obj.get_back(*tags)
+					return (obj, self.select, *comments)
 				except Exception:
 					pass
-			return (*tags, _id)
+			if obj is None:
+				return (*tags, _id)
+			return (obj, *tags)
 		return tags
 		
 	def position(self, event):

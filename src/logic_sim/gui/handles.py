@@ -1,3 +1,6 @@
+from .draw import Drawable
+
+
 class Handle:
 	def __init__(self, host, cursor, save_state=None):
 		self.host = host
@@ -46,9 +49,13 @@ class Handle:
 				self.cursor.attach(new_attachable)
 
 
-class Attachable:
+class Attachable(Drawable):
 	def __init__(self, device):
+		Drawable.__init__(self)
 		self.device = device()
+
+	def get_id(self):
+		return self.device.get_id()
 
 	def on_create(self, handle):
 		pass
@@ -64,6 +71,14 @@ class Attachable:
 		print(handle.args)
 		num, press, _, _ = handle.args[-1]
 		return num == 3 and not press
-	
+	def on_hand_over(self, button, press, x, y, cursor):
+		if button==3 and not press:
+			cursor.attach(self, apply_state=False)
+	def on_update(self):
+		pass
+
+	def description(self):
+		return self.device.description()
+
 	def __repr__(self):
 		return f"{self.device}_H"
